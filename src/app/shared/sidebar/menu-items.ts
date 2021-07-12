@@ -34,14 +34,6 @@ export const ROUTES: RouteInfo[] = [
     submenu: []
   },
   {
-    path: '/dashboard',
-    title: 'Dashboard',
-    icon: 'mdi mdi-file',
-    class: '',
-    extralink: false,
-    submenu: []
-  },
-  {
     path: '',
     title: 'CONSUMERS',
     icon: 'mdi mdi-dots-horizontal',
@@ -58,17 +50,9 @@ export const ROUTES: RouteInfo[] = [
     submenu: []
   },
   {
-    path: '/component/alert',
+    path: '/component/buttons',
     title: 'Redeem',
     icon: 'mdi mdi-message-bulleted',
-    class: '',
-    extralink: false,
-    submenu: []
-  },
-  {
-    path: '/component/dropdown',
-    title: 'Dashboard',
-    icon: 'mdi mdi-arrange-bring-to-front',
     class: '',
     extralink: false,
     submenu: []

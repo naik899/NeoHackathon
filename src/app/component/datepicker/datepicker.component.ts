@@ -121,7 +121,7 @@ export class NgbdDatepickerBasicComponent {
       let tempArray: any[] = [];
       iterator.forEach((element: { value: any; }) => {
         
-        tempArray.push(windowObject.Neon.u.HexString.fromBase64(element.value).toString());
+        tempArray.push(element.value);
       });
 
       this.tokenList = [...tempArray];
@@ -151,7 +151,7 @@ export class NgbdDatepickerBasicComponent {
     
       const toAddressInfo = new windowObject.Neon.wallet.Account(this.toAddress);
       const account = new windowObject.Neon.wallet.Account(environment.amazonPrivateKey);
-      let paramArray = [{"type": "Hash160", "value": toAddressInfo.scriptHash}, {"type": "String", "value": this.tokenId}, {"type": "String", "value": "Ravi"} ];
+      let paramArray = [{"type": "Hash160", "value": toAddressInfo.scriptHash}, {"type": "ByteArray", "value": this.tokenId}, {"type": "String", "value": "Ravi"} ];
       const scriptHashAccountAddress = windowObject.Neon.wallet.getScriptHashFromAddress(account.address);
         let networkMagic = environment.networkMagic;
     
@@ -171,9 +171,7 @@ export class NgbdDatepickerBasicComponent {
         config
       );
     
-        let res = await contract.testInvoke("transfer", paramArray);
-
-        debugger;
+        let res = await contract.invoke("transfer", paramArray);
 
     }
   }
