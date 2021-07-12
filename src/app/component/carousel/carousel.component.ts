@@ -1,8 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbCarouselConfig, NgbCarousel, NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { AssertNotNull } from '@angular/compiler';
 
 @Component({
 	selector: 'app-ngbd-buttons-radio',
@@ -10,41 +8,29 @@ import { AssertNotNull } from '@angular/compiler';
 	providers: [NgbCarouselConfig]
 })
 export class NgbdCarouselBasicComponent {
-	showNavigationArrows = false;
-	showNavigationIndicators = false;
 
-	constructor(config: NgbCarouselConfig) {
-		// customize default values of carousels used by this component tree
-		config.interval = 10000;
-		config.wrap = false;
-		config.keyboard = false;
-
-		config.showNavigationArrows = true;
-		config.showNavigationIndicators = true;
+	mintForm: FormGroup;
+	public image: string | any;
+	constructor(
+	  ) {
+		this.mintForm = new FormGroup({
+			name: new FormControl(null, Validators.required),
+			description: new FormControl(null, Validators.required),
+			points: new FormControl(null, Validators.required)
+		});
+	  }
+	ngOnInit(): void {
+		
+		
 	}
-	paused = false;
-	  unpauseOnArrow = false;
-	  pauseOnIndicator = false;
-	  pauseOnHover = true;
 
-	  @ViewChild('carousel', {static : true}) carousel: NgbCarousel=Object.create(null);
+    mintToken()
+	{
 
-	  togglePaused() {
-	    if (this.paused) {
-	      this.carousel.cycle();
-	    } else {
-	      this.carousel.pause();
-	    }
-	    this.paused = !this.paused;
-	  }
+	}
 
-	  onSlide(slideEvent: NgbSlideEvent) {
-	    if (this.unpauseOnArrow && slideEvent.paused &&
-	      (slideEvent.source === NgbSlideEventSource.ARROW_LEFT || slideEvent.source === NgbSlideEventSource.ARROW_RIGHT)) {
-	      this.togglePaused();
-	    }
-	    if (this.pauseOnIndicator && !slideEvent.paused && slideEvent.source === NgbSlideEventSource.INDICATOR) {
-	      this.togglePaused();
-	    }
-	  }
+
+	
+
+	
 }

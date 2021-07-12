@@ -10,7 +10,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: []
   },
   {
-    path: '/dashboard',
+    path: '/component/carousel',
     title: 'Mint',
     icon: 'mdi mdi-file',
     class: '',
