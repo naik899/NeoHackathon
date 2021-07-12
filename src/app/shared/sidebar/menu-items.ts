@@ -26,9 +26,18 @@ export const ROUTES: RouteInfo[] = [
     submenu: []
   },
   {
-    path: '/dashboard',
+    path: '/component/accordion',
     title: 'Manage Stores',
     icon: 'mdi mdi-file',
+    class: '',
+    extralink: false,
+    submenu: []
+  },
+  
+  {
+    path: '/component/timepicker',
+    title: 'All tokens',
+    icon: 'mdi mdi-equal',
     class: '',
     extralink: false,
     submenu: []
