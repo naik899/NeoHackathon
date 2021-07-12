@@ -1,5 +1,7 @@
 import { Component, Injectable } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgbDateStruct, NgbCalendar, NgbDateAdapter, NgbDateNativeAdapter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from 'src/environments/environment';
 
 const my = new Date();
 
@@ -67,63 +69,112 @@ const after = (one: NgbDateStruct, two: NgbDateStruct) =>
   ]
 })
 export class NgbdDatepickerBasicComponent {
-  model: NgbDateStruct=Object.create(null);
-  model4: NgbDateStruct=Object.create(null);
 
-  model2: NgbDateStruct=Object.create(null);
-  date: { year: number; month: number }={year:-1,month:-1};
+  tokenList: Array<string> = [];
+  tokenId: string | any;
+  toAddress: string | any;
+  transferForm: FormGroup;
+  constructor(
+	  ) {
+		this.transferForm = new FormGroup({
+			toAddress: new FormControl(null, Validators.required)
+		});
+	}
+	async ngOnInit(): Promise<void> {
+		
+		await this.getTokenInfo();
+	}
 
-  // Custom date adapter
-  model1: Date=new Date();
-  model11: Date=new Date();
+  async getTokenInfo(){
 
-  // footer
-  model5: NgbDateStruct=Object.create(null);
-  today5 = this.calendar5.getToday();
+    const vars = {};
 
-  get today() {
-    return new Date();
+
+     
+		const windowObject = window as any;
+
+  
+		const account = new windowObject.Neon.wallet.Account(environment.amazonPrivateKey);
+		let paramArray = [{"type": "Hash160", "value": account.scriptHash}];
+		const scriptHashAccountAddress = windowObject.Neon.wallet.getScriptHashFromAddress(account.address);
+		  let networkMagic = environment.networkMagic;
+  
+		  let rpcAddress= environment.nodeURL;
+  
+		  let config = {
+			account
+		  }
+  
+		  const contract = new windowObject.Neon.experimental.SmartContract(
+		  windowObject.Neon.u.HexString.fromHex(environment.contractHash),
+		  {
+			networkMagic,
+			rpcAddress,
+			account,
+		  },
+		  config
+		);
+  
+			let res = await contract.testInvoke("tokensOf", paramArray);
+      let iterator = res.stack[0].iterator;
+
+      let tempArray: any[] = [];
+      iterator.forEach((element: { value: any; }) => {
+        
+        tempArray.push(windowObject.Neon.u.HexString.fromBase64(element.value).toString());
+      });
+
+      this.tokenList = [...tempArray];
+
+
+    
   }
 
-  // This is for multiple month
-  displayMonths = 2;
-  navigation = 'select';
-  showWeekNumbers = false;
+  
+  
+  async transferToken()
+  {
+    
+    if(this.toAddress == null || this.toAddress == undefined)
+    {
+      alert("To Address cannot be empty");
+    }
+    else{
 
-  // This is for the disable datepicker
-  model3: NgbDateStruct = { year: my.getFullYear(), month: my.getMonth() + 1, day: my.getDate() };
-  disabled = true;
+     
+      const vars = {};
 
-  // This is for the range date picker
-  hoveredDate: NgbDateStruct=Object.create(null);
 
-  fromDate: NgbDateStruct=Object.create(null);
-  toDate: NgbDateStruct=Object.create(null);
+     
+      const windowObject = window as any;
+  
+    
+      const toAddressInfo = new windowObject.Neon.wallet.Account(this.toAddress);
+      const account = new windowObject.Neon.wallet.Account(environment.amazonPrivateKey);
+      let paramArray = [{"type": "Hash160", "value": toAddressInfo.scriptHash}, {"type": "String", "value": this.tokenId}, {"type": "String", "value": "Ravi"} ];
+      const scriptHashAccountAddress = windowObject.Neon.wallet.getScriptHashFromAddress(account.address);
+        let networkMagic = environment.networkMagic;
+    
+        let rpcAddress= environment.nodeURL;
+    
+        let config = {
+        account
+        }
+    
+        const contract = new windowObject.Neon.experimental.SmartContract(
+        windowObject.Neon.u.HexString.fromHex(environment.contractHash),
+        {
+        networkMagic,
+        rpcAddress,
+        account,
+        },
+        config
+      );
+    
+        let res = await contract.testInvoke("transfer", paramArray);
 
-  selectToday() {
-    this.model = { year: my.getFullYear(), month: my.getMonth() + 1, day: my.getDate() };
-  }
+        debugger;
 
-  constructor(calendar: NgbCalendar, private calendar1: NgbCalendar, private calendar5: NgbCalendar) {
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
-  }
-
-  onDateChange(date: NgbDateStruct) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && after(date, this.fromDate)) {
-      this.toDate = date;
-    } else {
-      this.toDate = Object.create(null);
-      this.fromDate = date;
     }
   }
-
-  isHovered = (date: NgbDate) => this.fromDate && !this.toDate && this.hoveredDate && after(date, this.fromDate) && before(date, this.hoveredDate);
-  isInside = (date: NgbDate) => after(date, this.fromDate) && before(date, this.toDate);
-  isFrom = (date: NgbDate) => equals(date, this.fromDate);
-  isTo = (date: NgbDate) => equals(date, this.toDate);
-  isDisabled = (date: NgbDate, current: { month: number }) => date.month !== current.month;
-  isWeekend = (date: NgbDate) => this.calendar1.getWeekday(date) >= 6;
 }

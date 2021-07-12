@@ -18,7 +18,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: []
   },
   {
-    path: '/dashboard',
+    path: '/component/datepicker',
     title: 'Transfer',
     icon: 'mdi mdi-file',
     class: '',
